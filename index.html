@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -90,19 +90,32 @@
         .todo-item .save:hover {
             background-color: #218838;
         }
-        .todo-item .enable {
-            background-color: #17a2b8;
+        .todo-item .complete {
+            background-color: #28a745;
             color: white;
         }
-        .todo-item .enable:hover {
-            background-color: #138496;
+        .todo-item .complete:hover {
+            background-color: #218838;
         }
-        .todo-item .disable {
+        .todo-item .incomplete {
             background-color: #6c757d;
             color: white;
         }
-        .todo-item .disable:hover {
+        .todo-item .incomplete:hover {
             background-color: #5a6268;
+        }
+        .delete-all {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .delete-all:hover {
+            background-color: #c82333;
         }
     </style>
 </head>
@@ -114,10 +127,12 @@
             <button type="button" id="add-button">Add</button>
         </form>
         <ul class="todo-list" id="todo-list"></ul>
+        <button class="delete-all" id="delete-all-button">Delete All Tasks</button>
     </div>
 
     <script>
         document.getElementById('add-button').addEventListener('click', addTodo);
+        document.getElementById('delete-all-button').addEventListener('click', deleteAllTasks);
 
         function addTodo() {
             const todoInput = document.getElementById('todo-input');
@@ -137,8 +152,8 @@
                     <button class="edit">Edit</button>
                     <button class="save" style="display: none;">Save</button>
                     <button class="delete">Delete</button>
-                    <button class="enable">Enable</button>
-                    <button class="disable" style="display: none;">Disable</button>
+                    <button class="complete">Task Completed</button>
+                    <button class="incomplete" style="display: none;">Task Incomplete</button>
                 </div>
             `;
 
@@ -148,14 +163,14 @@
             const editButton = todoItem.querySelector('.edit');
             const saveButton = todoItem.querySelector('.save');
             const deleteButton = todoItem.querySelector('.delete');
-            const enableButton = todoItem.querySelector('.enable');
-            const disableButton = todoItem.querySelector('.disable');
+            const completeButton = todoItem.querySelector('.complete');
+            const incompleteButton = todoItem.querySelector('.incomplete');
 
             editButton.addEventListener('click', () => editTask(todoItem, editButton, saveButton));
             saveButton.addEventListener('click', () => saveTask(todoItem, editButton, saveButton));
             deleteButton.addEventListener('click', () => deleteTask(todoItem));
-            enableButton.addEventListener('click', () => enableTask(todoItem, enableButton, disableButton));
-            disableButton.addEventListener('click', () => disableTask(todoItem, enableButton, disableButton));
+            completeButton.addEventListener('click', () => completeTask(todoItem, completeButton, incompleteButton));
+            incompleteButton.addEventListener('click', () => incompleteTask(todoItem, completeButton, incompleteButton));
         }
 
         function editTask(todoItem, editButton, saveButton) {
@@ -185,20 +200,30 @@
         }
 
         function deleteTask(todoItem) {
-            todoItem.remove();
+            if (confirm('Are you sure you want to delete this task?')) {
+                todoItem.remove();
+            }
         }
 
-        function enableTask(todoItem, enableButton, disableButton) {
-            todoItem.querySelector('span').style.textDecoration = 'none';
-            enableButton.style.display = 'none';
-            disableButton.style.display = 'inline-block';
-        }
-
-        function disableTask(todoItem, enableButton, disableButton) {
+        function completeTask(todoItem, completeButton, incompleteButton) {
             todoItem.querySelector('span').style.textDecoration = 'line-through';
-            enableButton.style.display = 'inline-block';
-            disableButton.style.display = 'none';
+            completeButton.style.display = 'none';
+            incompleteButton.style.display = 'inline-block';
+        }
+
+        function incompleteTask(todoItem, completeButton, incompleteButton) {
+            todoItem.querySelector('span').style.textDecoration = 'none';
+            completeButton.style.display = 'inline-block';
+            incompleteButton.style.display = 'none';
+        }
+
+        function deleteAllTasks() {
+            if (confirm('Are you sure you want to delete all tasks?')) {
+                document.getElementById('todo-list').innerHTML = '';
+            }
         }
     </script>
 </body>
 </html>
+
+
